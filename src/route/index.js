@@ -9,6 +9,7 @@ const loginController = require('../controller/loginController')
 const addressController = require('../controller/addressController')
 const loanController = require('../controller/loanController')
 const taskController = require('../controller/taskController')
+const surveyController = require('../controller/surveyController')
 
 //user route
 route.post('/add-user', auth.client, UserController.addUser)
@@ -35,6 +36,10 @@ route.get('/loan-details-update/:id', auth.client, loanController.loanUpdate)
 
 //User Task
 route.get('/task-list', auth.client, taskController.listOfTask)
+
+//Survey 
+route.post('/add-survey', auth.client, surveyController.surveyAdd)
+
 
 
 module.exports = route
