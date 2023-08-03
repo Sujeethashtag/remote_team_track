@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
-  const Branch = sequelize.define(
+  const Survey = sequelize.define(
     "survey_response",
     {
         task_id: {
@@ -51,5 +51,5 @@ module.exports = (sequelize) => {
     }
   );
 
-  return Branch;
+  return Survey;
 };
