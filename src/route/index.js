@@ -36,9 +36,13 @@ route.get('/loan-details-update/:id', auth.client, loanController.loanUpdate)
 
 //User Task
 route.get('/task-list', auth.client, taskController.listOfTask)
+route.get('/task-view/:id', auth.client, taskController.taskView)
 
 //Survey 
 route.post('/add-survey', auth.client, surveyController.surveyAdd)
+route.get('/reason-list', auth.client, surveyController.reasonList)
+route.get('/survey-list', auth.client, surveyController.surveyList)
+route.get('/survey-export', auth.client, surveyController.surveyExport)
 
 
 

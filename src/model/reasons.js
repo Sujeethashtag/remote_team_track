@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
-  const Branch = sequelize.define(
-    "branches",
+  const Reason = sequelize.define(
+    "reasons",
     {
       reason_text: {
         type: DataTypes.STRING(355),
@@ -12,12 +12,12 @@ module.exports = (sequelize) => {
       },
     },
     {
-      tableName: "branches",
+      tableName: "reasons",
       createdAt: "created_at",
       updatedAt: "updated_at",
       timestamps: true,
     }
   );
 
-  return Branch;
+  return Reason;
 };

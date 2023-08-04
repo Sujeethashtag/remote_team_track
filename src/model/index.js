@@ -47,4 +47,24 @@ db.tasks.belongsTo(db.loan_details, {
 	foreignKey: 'task_id'
   });
 
+  db.tasks.belongsTo(db.user, {
+	foreignKey: 'assignee'
+  });
+
+db.survey_response.belongsTo(db.reasons, {
+	foreignKey:'reason_id',
+})
+
+db.survey_response.belongsTo(db.tasks, {
+	foreignKey:'task_id',
+})
+db.survey_response.belongsTo(db.user, {
+	foreignKey:'user_id',
+})
+db.loan_details.belongsTo(db.branches, {
+	foreignKey:'bank_branch',
+})
+db.loan_details.belongsTo(db.user, {
+	foreignKey:'executive_id',
+})
 module.exports = db;

@@ -5,6 +5,7 @@ const fs = require("fs");
 const csvParser = require("csv-parser");
 const LoanDetails = db.loan_details;
 const Task = db.tasks;
+const User = db.user;
 
 const loanUpload = async (req, res) => {
   try {
@@ -90,7 +91,12 @@ const loanUpload = async (req, res) => {
 
 const LoanDetailList = async (req, res) => {
   try {
-    const loadData = await LoanDetails.findAll({});
+    const loadData = await LoanDetails.findAll({
+      include:[{
+        attributes:['name'],
+        model:User
+      }]
+    });
 
     return res.status(500).json({
       status: false,

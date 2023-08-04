@@ -1,9 +1,5 @@
 const db = require("../model/index");
 const {Op} = require('sequelize');
-const xlsx = require("xlsx");
-const csv = require("csv");
-const fs = require("fs");
-const csvParser = require("csv-parser");
 const LoanDetails = db.loan_details;
 const Task = db.tasks;
 const User = db.user;
@@ -40,10 +36,29 @@ const listOfTask = async (req, res)=>{
 }
 
 const taskView = async (req, res)=>{
-    console.log(`view ${JSON.stringify(req)}`);
+    try{
+       
+        const loadData = await LoanDetails.findOne({
+            where:{
+                id:req.params.id
+            }
+        })
+        return res.json({
+            status: true,
+            message: "Task details",
+            data:loadData
+          });
+       }catch(err)
+       {
+        return res.json({
+            status: false,
+            message: err.message,
+          });
+       }
 }
 
 
 module.exports = {
-listOfTask
+listOfTask,
+taskView
 };
