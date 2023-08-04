@@ -39,6 +39,10 @@ const listOfTask = async (req, res)=>{
    }
 }
 
+const taskView = async (req, res)=>{
+    console.log(`view ${JSON.stringify(req)}`);
+}
+
 
 module.exports = {
 listOfTask
