@@ -14,6 +14,7 @@ const surveyController = require('../controller/surveyController')
 //user route
 route.post('/add-user', auth.client, UserController.addUser)
 route.get('/user-list', auth.client, UserController.userList)
+route.get('/profile', auth.client, UserController.userProfile)
 route.get('/user-details/:id', auth.client, UserController.userDetails)
 route.put('/user-update/:id', auth.client, UserController.userUpdate)
 route.post('/bulk-user-add', upload.upload.single('file'), UserController.bulkUserAdd)
