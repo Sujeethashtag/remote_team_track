@@ -46,6 +46,12 @@ const taskView = async (req, res)=>{
     try{
        
         const loadData = await LoanDetails.findOne({
+            include: [
+                {
+                 attributes: ['name'],
+                  model: Branch,
+                },
+              ],
             where:{
                 id:req.params.id
             }
