@@ -97,6 +97,7 @@ const userDetails = async (req, res) => {
     });
   }
 };
+
 const userUpdate = async (req, res) => {
   try {
     let id = req.params.id;
@@ -188,10 +189,31 @@ const bulkUserAdd = async (req, res) => {
   }
 };
 
+const userProfile = async (req, res) => {
+  try{
+    const user_id = req.userData.id
+    const data = await User.findOne({
+      where:{id:user_id},
+    })
+    return res.json({
+      status: true,
+      message: "User Profile",
+      data
+    });
+  }catch(err)
+  {
+    return res.json({
+      status: false,
+      message: err.message,
+    });
+  }
+}
+
 module.exports = {
   addUser,
   userList,
   userUpdate,
   bulkUserAdd,
-  userDetails
+  userDetails,
+  userProfile
 };
