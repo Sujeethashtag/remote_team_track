@@ -37,6 +37,7 @@ db.branches = require("./branches")(sequelize, DataTypes);
 db.status = require("./status")(sequelize, DataTypes);
 db.reasons = require("./reasons")(sequelize, DataTypes);
 db.survey_response = require("./survey_response")(sequelize, DataTypes);
+db.logins = require("./logins")(sequelize, DataTypes);
 
 
 db.sequelize.sync({ force: false }).then(() => {
@@ -66,5 +67,9 @@ db.loan_details.belongsTo(db.branches, {
 })
 db.loan_details.belongsTo(db.user, {
 	foreignKey:'executive_id',
+})
+
+db.logins.belongsTo(db.user,{
+	foreignKey:'user_id',
 })
 module.exports = db;

@@ -17,7 +17,7 @@ module.exports = (sequelize) => {
         unique: true,
       },
       contact_number: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(199),
         allowNull: false,
         unique: true,
       },
@@ -43,7 +43,7 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       profile_image: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.TEXT,
         allowNull: true,
       },
       address: {
