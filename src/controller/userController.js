@@ -17,7 +17,6 @@ const addUser = async (req, res) => {
       parent_id,
       branch_id_mapping,
       gender,
-      profile_image,
       address,
       country,
       state,
@@ -25,6 +24,8 @@ const addUser = async (req, res) => {
       zipcode,
       status,
     } = req.body;
+    const profile_image = req.file.path;
+    return res.json({data:req.file.path})
     const salt = bcrypt.genSaltSync(10);
     const password = bcrypt.hashSync(req.body.password, salt);
     const user = await User.create({
@@ -209,11 +210,50 @@ const userProfile = async (req, res) => {
   }
 }
 
+const userProfileUpdate = async (req, res) => {
+  try{
+    const {
+      name,
+      gender,
+      profile_image,
+      address,
+      country,
+      state,
+      city,
+      zipcode,
+    } = req.body;
+    const user_id = req.userData.id
+    const data = await User.update({
+      name,
+      gender,
+      profile_image,
+      address,
+      country,
+      state,
+      city,
+      zipcode,
+    },{
+      where:{id:user_id},
+    })
+    return res.json({
+      status: true,
+      message: "Profile update successfully",
+    });
+  }catch(err)
+  {
+    return res.json({
+      status: false,
+      message: err.message,
+    });
+  }
+}
+
 module.exports = {
   addUser,
   userList,
   userUpdate,
   bulkUserAdd,
   userDetails,
-  userProfile
+  userProfile,
+  userProfileUpdate
 };
