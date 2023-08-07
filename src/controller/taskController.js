@@ -3,6 +3,7 @@ const {Op} = require('sequelize');
 const LoanDetails = db.loan_details;
 const Task = db.tasks;
 const User = db.user;
+const Branch = db.branches
 
 const listOfTask = async (req, res)=>{
    try{
@@ -15,6 +16,12 @@ const listOfTask = async (req, res)=>{
     const taskId = taskList.map((task) => task.task_id);
 
     const loadData = await LoanDetails.findAll({
+        include: [
+            {
+             attributes: ['name'],
+              model: Branch,
+            },
+          ],
         where:{
             id:{
                 [Op.in]:taskId

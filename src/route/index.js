@@ -25,9 +25,10 @@ route.post('/logout', loginController.logout)
 route.post('/password-change', loginController.passwordUpdate)
 route.post('/forgot-password', loginController.forgotPassword)
 
-//address controller 
+//address and barnch controller 
 route.get('/country-list', addressController.countryList)
 route.get('/state-list', addressController.stateList)
+route.post('/add-branch', addressController.branchAdd)
 
 //* loan details
 route.post('/upload-loan-details', upload.upload.single('file'),  auth.client, loanController.loanUpload)
