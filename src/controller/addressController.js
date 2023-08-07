@@ -4,7 +4,7 @@ const State = db.state;
 
 const countryList = async (req, res) => {
   try {
-    const countryData = await Country.findOne({
+    const countryData = await Country.findAll({
       where: {
         code: "IN",
       },
