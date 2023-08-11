@@ -186,7 +186,9 @@ const loanUpdate = async (req, res) => {
 
 const assignTask = async (req, res) => {
   try{
-    
+    const data = req.body
+
+
   }catch(err)
   {
     return res.status(500).json({
@@ -201,4 +203,5 @@ module.exports = {
   LoanDetailList,
   LoanDetailView,
   loanUpdate,
+  assignTask
 };

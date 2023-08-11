@@ -22,7 +22,8 @@ route.put('/user-update/:id', auth.client, UserController.userUpdate)
 route.post('/bulk-user-add', upload.upload.single('file'), UserController.bulkUserAdd)
 
 //login route
-route.post('/login', loginController.userLogin)
+route.post('/login', loginController.adminLogin)
+route.post('/user-login', loginController.userLogin)
 route.post('/logout/:id', loginController.logout)
 route.post('/password-change', loginController.passwordUpdate)
 route.post('/forgot-password', loginController.forgotPassword)
@@ -44,7 +45,7 @@ route.get('/loan-details-view/:id', auth.client, loanController.LoanDetailView)
 route.get('/loan-details-update/:id', auth.client, loanController.loanUpdate)
 
 //User Task
-route.get('/task-list', auth.client, taskController.listOfTask)
+route.get('/task-list/:status', auth.client, taskController.listOfTask)
 route.get('/task-view/:id', auth.client, taskController.taskView)
 
 //Survey 
