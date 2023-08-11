@@ -12,6 +12,12 @@ module.exports = (sequelize) => {
       reason_id: {
         type: DataTypes.INTEGER,
       },
+      action_code: {
+        type: DataTypes.STRING,
+      },
+      remark: {
+        type: DataTypes.TEXT,
+      },
       response_json: {
         type: DataTypes.TEXT,
       },
@@ -40,7 +46,7 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM('0', '1'),
       },
       status: {
-        type: DataTypes.ENUM('0', '1'),
+        type: DataTypes.BOOLEAN,
       },
     },
     {

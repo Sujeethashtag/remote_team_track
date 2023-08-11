@@ -5,6 +5,9 @@ const csv = require("csv");
 const fs = require("fs");
 const csvParser = require("csv-parser");
 const User = db.user;
+const Transporter = require("../helper/sendmail");
+const ejs = require("ejs");
+const jwt = require('jsonwebtoken');
 
 // Insert User
 const addUser = async (req, res) => {
@@ -13,8 +16,6 @@ const addUser = async (req, res) => {
       name,
       email,
       contact_number,
-      role_id,
-      parent_id,
       branch_id_mapping,
       gender,
       address,
@@ -25,14 +26,18 @@ const addUser = async (req, res) => {
       status,
     } = req.body;
     const profile_image = req.file.path;
-    return res.json({data:req.file.path})
-    const salt = bcrypt.genSaltSync(10);
-    const password = bcrypt.hashSync(req.body.password, salt);
+    const verifyPhone = await User.findOne({where:{contact_number,status:'1'}})
+    if(verifyPhone)
+    {
+      return res.json({
+        status: true,
+        message: "Please enter new contact number",
+      });
+    }
     const user = await User.create({
       name,
       email,
       contact_number,
-      password,
       role_id: 2,
       parent_id: req.userData.id,
       branch_id_mapping,
@@ -43,11 +48,36 @@ const addUser = async (req, res) => {
       state,
       city,
       zipcode,
-      status,
+      status:'1',
+    });
+
+    const userData = await User.findOne({
+      where: { email },
+    });
+    const secretKey = 'urieyw4y67238987453ygth'; // Replace with your secret key
+    const payload = {
+      userId: userData.id,
+      username: userData.email
+    };
+    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    userData.reset_password_token = token;
+    userData.reset_password_expires = new Date(Date.now() + 3600000); // 1 hour from now
+    await userData.save();
+    const emailData = await ejs.renderFile(
+      "./src/helper/password_templete.ejs",
+      {
+        resetLink: `http://localhost:3000/set-password/${token}`,
+      }
+    );
+    Transporter.transporter.sendMail({
+      from: "info@easyrfq.com",
+      to: email,
+      subject: "Set Password",
+      html: emailData,
     });
     return res.json({
       status: true,
-      message: "User Add Successfully",
+      message: "User added successfully! Please check your email to set a password.",
       data: user,
     });
   } catch (err) {
