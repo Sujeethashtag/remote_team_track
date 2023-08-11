@@ -19,7 +19,64 @@ const userLogin = async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "User Not found." });
     }
+    if(user.role_id !==2)
+    {
+      return res.status(404).send({ message: "User Not found." });
+    }
 
+    const passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        accessToken: null,
+        message: "Invalid Password!",
+      });
+    }
+
+    const token = User.getAuth(user); // Call the getAuth method on the User model instance
+    const currentTime = new Date();
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}`;
+
+    const loginAdd = await Login.create({
+      client_id: user.parent_id,
+      user_id: user.id,
+      login_time: formattedTime,
+      status: "1",
+    });
+    return res.status(200).json({
+      status: true,
+      message: "Login success",
+      accessToken: token,
+    });
+  } catch (err) {
+    return res.json({
+      status: false,
+      message: err.message,
+    });
+  }
+};
+const adminLogin = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).send({ message: "User Not found." });
+    }
+  if(user.role_id !==1)
+    {
+      return res.status(404).send({ message: "User Not found." });
+    }
     const passwordIsValid = bcrypt.compareSync(
       req.body.password,
       user.password
@@ -248,5 +305,6 @@ module.exports = {
   passwordUpdate,
   forgotPassword,
   UserAttends,
-  changePassword
+  changePassword,
+  adminLogin
 };
