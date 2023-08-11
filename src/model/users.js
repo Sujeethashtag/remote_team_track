@@ -17,9 +17,7 @@ module.exports = (sequelize) => {
         unique: true,
       },
       contact_number: {
-        type: DataTypes.STRING(199),
-        allowNull: false,
-        unique: true,
+        type: DataTypes.STRING,
       },
       password: {
         type: DataTypes.STRING(255),
@@ -67,9 +65,15 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       status: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.ENUM('0','1'),
         allowNull: true,
       },
+      reset_password_token:{
+        type: DataTypes.TEXT,
+      },
+      reset_password_expires:{
+        type: DataTypes.DATE,
+      }
     },
     {
       tableName: "users",

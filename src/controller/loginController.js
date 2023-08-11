@@ -1,10 +1,12 @@
 const db = require("../model/index");
 const bcrypt = require("bcrypt");
+const {Op} = require('sequelize');
 const Transporter = require("../helper/sendmail");
 const ejs = require("ejs");
 const User = db.user;
 const Role = db.role;
 const Login = db.logins;
+const jwt = require('jsonwebtoken');
 
 const userLogin = async (req, res) => {
   try {
@@ -60,7 +62,7 @@ const userLogin = async (req, res) => {
 const logout = async (req, res) => {
   const findLogin = await Login.findOne({
     where: {
-      user_id: req.userData.id,
+      user_id: req.params.id,
     },
     order: [["id", "DESC"]],
   });
@@ -155,21 +157,26 @@ const forgotPassword = async (req, res) => {
         message: "Please enter valid email !",
       });
     }
-    const token = "randomly_generated_token";
+    const secretKey = 'urieyw4y67238987453ygth'; // Replace with your secret key
+    const payload = {
+      userId: userData.id,
+      username: userData.email
+    };
+    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
     userData.reset_password_token = token;
     userData.reset_password_expires = new Date(Date.now() + 3600000); // 1 hour from now
     await userData.save();
     const emailData = await ejs.renderFile(
       "./src/helper/password_templete.ejs",
       {
-        resetLink: `http://192.168.1.7:4000/api/reset-password/${token}`,
+        resetLink: `http://localhost:3000/generate-password/${token}`,
       }
     );
 
     Transporter.transporter.sendMail({
-      from: "yadavsujeet391@gmail.com",
+      from: "info@easyrfq.com",
       to: email,
-      subject: "hello world!",
+      subject: "Forgot Password",
       html: emailData,
     });
     return res.status(201).json({ message: "Send Mail" });
@@ -178,6 +185,41 @@ const forgotPassword = async (req, res) => {
     return res.status(500).json({ message: "Something went wrong." });
   }
 };
+
+const changePassword = async (req, res)=>{
+  try{
+    const secretKey = 'urieyw4y67238987453ygth'; // Replace with your secret key
+    const decodedToken = jwt.verify(req.params.token, secretKey);
+    const salt = bcrypt.genSaltSync(10);
+    const password = bcrypt.hashSync(req.body.new_password, salt);
+    const match_password = await User.update({
+      password,
+      reset_password_token:null
+    },{
+      where: {
+        id:decodedToken.userId,
+        reset_password_token: { [Op.not]: null }
+      },
+    });
+    if(match_password==0)
+    {
+      return res.json({
+        status: false,
+        message: "Token is not valid",
+      });
+    }
+    return res.json({
+      status: true,
+      message: "New password add successfully",
+      
+    });
+  }catch(err){
+    return res.json({
+      status: false,
+      message: err.message,
+    });
+  }
+}
 
 const UserAttends = async (req, res)=>{
   try{
@@ -205,5 +247,6 @@ module.exports = {
   logout,
   passwordUpdate,
   forgotPassword,
-  UserAttends
+  UserAttends,
+  changePassword
 };

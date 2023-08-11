@@ -88,14 +88,21 @@ const loanUpload = async (req, res) => {
   }
 };
 
-
 const LoanDetailList = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    
+    const where = {
+
+    }
     const loadData = await LoanDetails.findAll({
       include:[{
         attributes:['name'],
         model:User
-      }]
+      }],
+      limit,
+      offset: (page - 1) * limit,
     });
 
     return res.status(500).json({

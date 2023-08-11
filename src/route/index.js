@@ -10,6 +10,7 @@ const addressController = require('../controller/addressController')
 const loanController = require('../controller/loanController')
 const taskController = require('../controller/taskController')
 const surveyController = require('../controller/surveyController')
+const dashboardController = require('../controller/dashboardController')
 
 //user route
 route.post('/add-user', upload.upload.single('file'), auth.client, UserController.addUser)
@@ -22,15 +23,19 @@ route.post('/bulk-user-add', upload.upload.single('file'), UserController.bulkUs
 
 //login route
 route.post('/login', loginController.userLogin)
-route.post('/logout', auth.client, loginController.logout)
+route.post('/logout/:id', loginController.logout)
 route.post('/password-change', loginController.passwordUpdate)
 route.post('/forgot-password', loginController.forgotPassword)
+route.put('/new-password/:token', loginController.changePassword)
 route.get('/user-attends', loginController.UserAttends)
 
 //address and barnch controller 
 route.get('/country-list', addressController.countryList)
 route.get('/state-list', addressController.stateList)
 route.post('/add-branch', addressController.branchAdd)
+route.get('/branch-list', addressController.barnchListing)
+route.put('/edit-branch/:id', addressController.branchUpdate)
+route.get('/branch-details/:id', addressController.barnchDetails)
 
 //* loan details
 route.post('/upload-loan-details', upload.upload.single('file'),  auth.client, loanController.loanUpload)
@@ -48,6 +53,15 @@ route.get('/reason-list', auth.client, surveyController.reasonList)
 route.get('/survey-list', auth.client, surveyController.surveyList)
 route.get('/survey-export', auth.client, surveyController.surveyExport)
 
+//download
+route.get('/download', function(req, res){
+    const file = `${__dirname}../../../my-excel-file.xlsx`;
+    res.download(file); // Set disposition and send it.
+  });
+
+//dashbaord 
+route.get('/user-dashbaord', auth.client, dashboardController.userDashboard)
+route.get('/admin-dashbaord', auth.client, dashboardController.adminDashboard)
 
 
 module.exports = route

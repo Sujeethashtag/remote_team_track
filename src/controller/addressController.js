@@ -1,6 +1,7 @@
 const db = require("../model/index");
 const Country = db.country;
 const State = db.state;
+const Branch = db.branches
 
 const countryList = async (req, res) => {
   try {
@@ -9,7 +10,7 @@ const countryList = async (req, res) => {
         code: "IN",
       },
     });
-    return res.json({
+    return res.status(200).json({
       status: true,
       message: "Country List",
       data: countryData,
@@ -28,7 +29,7 @@ const stateList = async (req, res) => {
         country_code: "IN",
       },
     });
-    return res.json({
+    return res.status(200).json({
       status: true,
       message: "state List",
       data: stateData,
@@ -78,8 +79,83 @@ const branchAdd = async (req, res) => {
   }
 };
 
+const barnchListing = async (req, res) =>{
+  try{
+    const branches=await Branch.findAll({});
+    return res.status(200).json({
+      status :true,
+      message:"Branch listing",
+      data   :branches
+    })
+
+  }catch(err){
+    console.log("error");
+  }
+}
+
+const barnchDetails = async (req, res) =>{
+  try{
+    const branches=await Branch.findOne({
+      where:{
+        id:req.params.id
+      }
+    });
+    return res.status(200).json({
+      status :true,
+      message:"Branch Details",
+      data   :branches
+    })
+
+  }catch(err){
+    console.log("error");
+  }
+}
+
+const branchUpdate = async (req, res) => {
+  try {
+    const {
+      branch_code,
+      name,
+      address,
+      country,
+      state,
+      city,
+      zipcode,
+      status,
+    } = req.body;
+    let updateBranch = await Branch.update({
+      branch_code,
+      name,
+      address,
+      country,
+      state,
+      city,
+      zipcode,
+      status,
+    },{
+      where:{
+        id:req.params.id
+      }
+    });
+
+    return res.json({
+      status: true,
+      message: "Updated branch",
+    });
+  } catch (err) {
+    return res.json({
+      status: false,
+      message: err.message,
+      data: stateData,
+    });
+  }
+};
+
 module.exports = {
   countryList,
   stateList,
   branchAdd,
+  barnchListing,
+  branchUpdate,
+  barnchDetails
 };
